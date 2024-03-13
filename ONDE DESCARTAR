@@ -1,0 +1,331 @@
+create database OndeDescartar
+go
+
+use OndeDescartar
+go
+
+create table Tb_Estado(
+sigla_Estado char(2) not null,
+nome_Estado varchar(100)
+)
+go
+
+create table Tb_Cidade(
+cod_Cidade int not null,
+nome_Cidade varchar(100),
+sigla_Estado char(2) not null
+)
+go
+
+create table Tb_Bairro(
+cod_Bairro int not null,
+nome_Bairro varchar(100),
+cod_Cidade int not null,
+sigla_Estado char(2) not null
+)
+go
+
+create table Tb_Endereco(
+cod_Bairro int not null,
+cod_Endereco int not null,
+nome_Logradouro varchar(100),
+cod_Cidade int not null,
+sigla_estado char(2) not null,
+CEP VARCHAR (9),
+TELEFONE VARCHAR(20)
+)
+go
+
+--ALTER TABLE TB_ENDERECO ADD TELEFONE VARCHAR(20)
+--ALTER TABLE TB_ENDERECO DROP COLUMN CEP
+--ALTER TABLE TB_ENDERECO ADD CEP VARCHAR(9)
+
+create table Tb_Tipo_Residuo(
+cod_Residuo int not null,
+nome_Residuo varchar(100)
+)
+go
+
+create table Tb_Ponto(
+cod_Ponto int not null,
+cod_Residuo int not null,
+nm_Ponto VARCHAR(100) NULL,
+cod_Endereco int not null,
+num_Logradouro int,
+complemento varchar(30)
+)
+go
+
+ALTER TABLE Tb_Estado
+	ADD CONSTRAINT PK_Estado PRIMARY KEY(sigla_Estado)
+GO
+
+alter table tb_cidade
+	add	CONSTRAINT PK_Cidade PRIMARY KEY (cod_Cidade, sigla_estado)
+GO
+
+ALTER TABLE Tb_Cidade
+	ADD CONSTRAINT FK_Estado 
+		FOREIGN KEY(sigla_Estado)
+			REFERENCES Tb_Estado(sigla_Estado)
+go
+
+--alter table Tb_Cidade
+		--drop constraint PK_Cidade
+
+ALTER TABLE Tb_Bairro
+	ADD CONSTRAINT FK_Cidade
+		FOREIGN KEY(cod_Cidade, sigla_estado)
+			REFERENCES Tb_Cidade(cod_Cidade, sigla_estado),
+	CONSTRAINT PK_Bairro PRIMARY KEY (cod_Bairro, cod_Cidade, sigla_estado)
+GO
+
+ALTER TABLE Tb_Endereco
+	ADD CONSTRAINT FK_Bairro
+		FOREIGN KEY(cod_Bairro, cod_Cidade, sigla_estado)
+			REFERENCES Tb_Bairro(cod_Bairro, cod_Cidade, sigla_estado),
+	CONSTRAINT PK_Endereco PRIMARY KEY (cod_Endereco)
+GO
+
+
+ALTER TABLE Tb_Tipo_Residuo
+	ADD CONSTRAINT PK_Tipo_Residuo PRIMARY KEY (cod_Residuo)
+GO
+
+ALTER TABLE Tb_Ponto
+	ADD CONSTRAINT FK_Endereco
+		FOREIGN KEY(cod_Endereco)
+			REFERENCES Tb_Endereco(cod_Endereco),
+		CONSTRAINT Fk_Tipo_Residuo
+			FOREIGN KEY(cod_Residuo)
+				REFERENCES Tb_Tipo_Residuo(cod_Residuo),
+		CONSTRAINT PK_Ponto PRIMARY KEY (cod_Ponto)
+GO
+
+insert into Tb_Tipo_Residuo (cod_Residuo,nome_Residuo) values (1,'VIDRO')
+insert into Tb_Tipo_Residuo (cod_Residuo,nome_Residuo) values (2,'PILHAS E BATERIAS DE ELETRO-ELETRÔNICOS')
+insert into Tb_Tipo_Residuo (cod_Residuo,nome_Residuo) values (3,'LÂMPADA')
+insert into Tb_Tipo_Residuo (cod_Residuo,nome_Residuo) values (4,'MEDICAMENTO')
+insert into Tb_Tipo_Residuo (cod_Residuo,nome_Residuo) values (5,'INSUMO MÉDICO (SERINGA, AGULHAS, FITAS E OUTROS)')
+insert into Tb_Tipo_Residuo (cod_Residuo,nome_Residuo) values (6,'ÓLEO')
+insert into Tb_Tipo_Residuo (cod_Residuo,nome_Residuo) values (7,'FILMES RADIOLÓGICOS (CHAPA DE RAIO X)')
+--insert into Tb_Tipo_Residuo (cod_Residuo,nome_Residuo) values (8,'ELETRÔNICOS')
+--insert into Tb_Tipo_Residuo (cod_Residuo,nome_Residuo) values (9,'BICICLETAS')
+--insert into Tb_Tipo_Residuo (cod_Residuo,nome_Residuo) values (10,'PARAFINA')
+
+GO
+
+SELECT * FROM Tb_Tipo_Residuo
+
+insert into TB_estado (sIgLA_estado, nome_estado) values ('SP', 'SÃO PAULO')
+GO
+INSERT INTO Tb_Cidade (cod_Cidade,sigla_Estado,nome_Cidade) VALUES (1,'SP','SANTOS')
+GO
+
+SELECT *FROM Tb_Bairro
+ 
+ /*UPDATE Tb_Bairro SET nome_Bairro = 'SANTA MARIA'
+ WHERE cod_Bairro = 52*/
+
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (1,1,'SP','APARECIDA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (2,1,'SP','BOQUEIRÃO')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (3,1,'SP','EMBARÉ')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (4,1,'SP','GONZAGA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (5,1,'SP','JOSÉ MENINO')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (6,1,'SP','POMPEIA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (7,1,'SP','PONTA DA PRAIA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (8,1,'SP','CAMPO GRANDE')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (9,1,'SP','CENTRO')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (10,1,'SP','ENCRUZILHADA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (11,1,'SP','JABAQUARA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (12,1,'SP','MACUCO')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (13,1,'SP','MARAPÉ')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (14,1,'SP','PAQUETÁ')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (15,1,'SP','PORTO ALEMOA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (16,1,'SP','PORTO MACUCO')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (17,1,'SP','PORTO PAQUETÁ')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (18,1,'SP','PORTO PONTA DA PRAIA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (19,1,'SP','PORTO SABOÓ')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (20,1,'SP','PORTO VALONGO')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (21,1,'SP','SABOÓ')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (22,1,'SP','VALONGO')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (23,1,'SP','VILA BELMIRO')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (24,1,'SP','VILA MATHIAS')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (25,1,'SP','VILA NOVA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (26,1,'SP','VILA RICA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (27,1,'SP','MORRO SERRAT')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (28,1,'SP','MORRO CACHOEIRA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (29,1,'SP','MORRO CHICO DE PAULA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (30,1,'SP','MORRO NOVA CINTRA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (31,1,'SP','MORRO EMBARÉ')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (32,1,'SP','MORRO FONTANA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (33,1,'SP','MORRO JABAQUARA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (34,1,'SP','MORRO JOSÉ MENINO')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (35,1,'SP','MORRO MARAPÉ')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (36,1,'SP','MORRO PACHECO')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (37,1,'SP','MORRO PENHA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (38,1,'SP','MORRO SABOÓ')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (39,1,'SP','MORRO SANTA MARIA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (40,1,'SP','MORRO SANTA TEREZINHA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (41,1,'SP','MORRO SÃO BENTO')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (42,1,'SP','ALEMOA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (43,1,'SP','AREIA BRANCA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (44,1,'SP','BOM RETIRO')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (45,1,'SP','CANELEIRA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (46,1,'SP','CHICO DE PAULA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (47,1,'SP','CASTELO')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (48,1,'SP','PIRATININGA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (49,1,'SP','SÃO MANOEL')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (50,1,'SP','OUTEIRINHO')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (51,1,'SP','RÁDIO CLUBE')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (52,1,'SP','SANTA MARIA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (53,1,'SP','SÃO JORGE')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (54,1,'SP','VILA HADDAD')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (55,1,'SP','ESTUÁRIO')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (56,1,'SP','MORRO BOA VISTA')
+INSERT INTO Tb_Bairro (cod_Bairro,cod_Cidade,sigla_Estado,nome_Bairro) VALUES (57,1,'SP','VILA SÃO BENTO')
+GO
+
+select *from Tb_Bairro
+go
+
+select * from Tb_Endereco
+go
+INSERT INTO Tb_Endereco (cod_Endereco, nome_Logradouro, cod_Bairro, cod_Cidade, sigla_estado, CEP, TELEFONE)
+  VALUES (1,'Av. Nossa Senhora de Fátima',42,1,'SP',null,null),
+         (2,'Av. Senador Feijó',22,1,'SP',null,null),
+		 (3,'R. Comendador Martins',22,1,'SP',null,null),
+		 (4,'R. Alexandre Martins',1,1,'SP',null,null),
+		 (5,'R. Conselheiro Nebias',2,1,'SP',null,null),
+		 (6,'R. Av. Dr. Pedro Lessa',7,1,'SP',null,null),
+		 (7,'R. João Pessoa',22,1,'SP',null,null),
+		 (8,'R. João Fraccaroli', 42,1,'SP',null,null),
+		 (9,'R. Assis Correia',4,1,'SP',NULL,NULL),
+		 (10, 'Av. Prof. Aristóteles Menezes',7,1,'SP',NULL,NULL),
+		 (11, 'Av. Dona Ana Costa',4,1,'SP',NULL,NULL),
+		 (12, 'Av. Epitácio Pessoa',1,1,'SP',NULL,NULL),
+		 (13,'Praça Fernandes Pacheco',4,1,'SP',NULL,NULL),
+		 (14,'Praça Mauá',9,1,'SP',NULL,NULL),
+		 (15,'R. Mato Grosso',2,1,'SP',NULL,NULL),
+		 (16, 'R. Boris Kaufmam',42,1,'SP',NULL,NULL)
+GO
+
+insert into TB_PONTO (cod_Ponto, cod_Residuo, cod_Endereco, num_Logradouro, complemento,nm_ponto)
+vALUES (1,3,1,1440,NULL,'MAKRO SANTOS'),
+       (2,3,2,414,NULL,'ANDRA'),
+	   (3,3,3,241,NULL,'ROLDÃO'),
+	   (4,3,4,80,'LOJA 43','CARREFOUR - PRAIAMAR'),
+	   (5,3,5,802,NULL,'CARREFOUR'),
+	   (6,3,6,993,NULL,'VOLTLUZ'),
+	   (7,3,4,80,'LOJA 301','SODIMAC DICICO'),
+	   (8,3,1,50,NULL,'ASSAÍ')
+GO
+insert into TB_PONTO (cod_Ponto, cod_Residuo, cod_Endereco, num_Logradouro, complemento,nm_ponto)
+values (9,2,4,80,'LOJA 43','CARREFOUR - PRAIAMAR'),
+       (10,2,1,298,null,'ATACADÃO'),
+	   (11,2,7,185,null,'LOJAS CEM')
+
+insert into TB_PONTO (cod_Ponto, cod_Residuo, cod_Endereco, num_Logradouro, complemento,nm_ponto)
+values (12,4,7,1728,null,'POLICLÍNICA APARECIDA'),
+       (13,4,8,null,null,'POLICLÍNICA BOM RETIRO'),
+	   (14,4,9,17,null,'POLICLÍNICA GONZAGA')
+
+insert into TB_PONTO (cod_Ponto, cod_Residuo, cod_Endereco, num_Logradouro, complemento,nm_ponto)
+values (15,6,11,452,null,'RC SEGUROS'),
+       (16,6,12,466,null,'ETEC ARISTÓTELES FERREIRA'),
+	   (17,6,10,41,null,'UME PEDRO II')
+
+insert into TB_PONTO (cod_Ponto, cod_Residuo, cod_Endereco, num_Logradouro, complemento,nm_ponto)
+values (18,1,13,NULL,null,'GONZAGA'),
+       (19,1,14,NULL,null,'CENTRO'),
+	   (20,1,5,811,null,'BOQUEIRÃO')
+
+insert into TB_PONTO (cod_Ponto, cod_Residuo, cod_Endereco, num_Logradouro, complemento,nm_ponto)
+values (24,7,5,540,NULL,'CLÍNICA RADIOLÓGICA DE SANTOS'),
+       (25,7,15,79,NULL,'CLÍNICA MEGA IMAGEM')
+
+insert into TB_PONTO (cod_Ponto, cod_Residuo, cod_Endereco, num_Logradouro, complemento,nm_ponto)
+values (21,5,7,1728,null,'POLICLÍNICA APARECIDA'),
+       (22,5,8,null,null,'POLICLÍNICA BOM RETIRO'),
+	   (23,5,9,17,null,'POLICLÍNICA GONZAGA')
+go
+
+create view VW_PONTO
+as
+SELECT P.NM_PONTO, R.nome_Residuo, E.nome_Logradouro, P.num_Logradouro, isnull(P.complemento,'') Complemento,
+       B.nome_Bairro, C.nome_Cidade, C.sigla_Estado, isnull(E.CEP,'') CEP, isnull(E.TELEFONE,'') Telefone
+  FROM Tb_Ponto P, Tb_Tipo_Residuo R, Tb_Endereco E, Tb_Bairro B, Tb_Cidade C
+ WHERE P.cod_Residuo = R.cod_Residuo
+   AND P.cod_Endereco = E.cod_Endereco
+   AND E.cod_Bairro = B.cod_Bairro
+   AND E.cod_Cidade = C.cod_Cidade
+   AND E.sigla_estado = C.sigla_Estado
+go
+select * from VW_PONTO
+go
+select * from VW_PONTO where nome_Residuo like 'pil%'
+go
+select * from VW_PONTO where nome_Residuo = 'vidro' or nome_Residuo = 'lâmpada'
+go
+
+CREATE TABLE TB_COLETA_SELETIVA(
+ COD_COLETA NUMERIC(5) NOT NULL,
+ COD_BAIRRO INT NULL,
+ COD_CIDADE INT NULL,
+ SIGLA_ESTADO CHAR(2) NULL,
+ DIA_SEMANA VARCHAR(30) NULL,
+ HORARIO VARCHAR (3) NULL)
+GO
+
+SELECT *FROM TB_COLETA_SELETIVA
+
+ALTER TABLE TB_COLETA_SELETIVA ADD CONSTRAINT TB_COLETA_SELETIVA_pk PRIMARY KEY (COD_COLETA)
+GO
+
+ALTER TABLE TB_COLETA_SELETIVA ADD CONSTRAINT TB_COLETA_SELETIVA_FK_BAIRRO FOREIGN KEY (COD_BAIRRO, COD_CIDADE, SIGLA_ESTADO)
+ REFERENCES TB_BAIRRO(COD_BAIRRO, COD_CIDADE, SIGLA_ESTADO)
+GO
+INSERT INTO TB_COLETA_SELETIVA (COD_COLETA,COD_BAIRRO,COD_CIDADE,SIGLA_ESTADO,DIA_SEMANA, HORARIO)
+ VALUES (1,2,1,'SP','SEGUNDA-FEIRA','13H'),
+		(2,51,1,'SP','SEGUNDA-FEIRA', '8H'),
+		(3,44,1,'SP','SEGUNDA-FEIRA', '8H'),
+		(4,45,1,'SP','SEGUNDA-FEIRA', '8H'),
+		(5,40,1,'SP','SEGUNDA-FEIRA', '8H'),
+		(6,12,1,'SP','SEGUNDA-FEIRA', '8H'),
+		(7,8,1,'SP','TERÇA-FEIRA', '13H'),
+		(8,48,1,'SP','TERÇA-FEIRA', '8H'),
+		(9,42,1,'SP','TERÇA-FEIRA', '8H'),
+		(10,23,1,'SP','TERÇA-FEIRA', '8H'),
+		(11,22,1,'SP','TERÇA-FEIRA', '8H'),
+		(12,41,1,'SP','TERÇA-FEIRA', '8H'),
+		(13,56,1,'SP','TERÇA-FEIRA', '8H'),
+		(14,36,1,'SP','TERÇA-FEIRA', '8H'),
+		(15,57,1,'SP','TERÇA-FEIRA', '8H'),
+		(16,13,1,'SP','QUARTA-FEIRA', '13h'),
+		(17,4,1,'SP','QUARTA-FEIRA', '13h'),
+		(18,1,1,'SP','QUARTA-FEIRA', '13h'),
+		(19,14,1,'SP','QUARTA-FEIRA', '8H'),
+		(20,23,1,'SP','QUARTA-FEIRA', '8H'),
+		(21,9,1,'SP','QUARTA-FEIRA', '8H'),
+		(22,47,1,'SP','QUARTA-FEIRA', '8H'),
+		(23,6,1,'SP','QUINTA-FEIRA', '13H'),
+		(24,5,1,'SP','QUINTA-FEIRA', '13H'),
+		(25,4,1,'SP','QUINTA-FEIRA', '13H'),
+		(26,51,1,'SP','QUINTA-FEIRA', '8H'),
+		(26,53,1,'SP','QUINTA-FEIRA', '8H'),
+		(27,46,1,'SP','QUINTA-FEIRA', '8H'),
+		(28,11,1,'SP','QUINTA-FEIRA', '8H'),
+		(29,27,1,'SP','QUINTA-FEIRA', '8H'),
+		(30,3,1,'SP','SEXTA-FEIRA', '13H'),
+		(31,24,1,'SP','SEXTA-FEIRA', '8H'),
+		(32,43,1,'SP','SEXTA-FEIRA', '8H'),
+		(33,4,1,'SP','SEXTATA-FEIRA', '8H'),
+		(34,7,1,'SP','SÁBADO', '13H'),
+		(35,4,1,'SP','SÁBADO', '13H'),
+		(36,30,1,'SP','SÁBADO', '13H'),
+		(37,45,1,'SP','SÁBADO', '8H'),
+		(38,21,1,'SP','SÁBADO', '8H'),
+		(39,10,1,'SP','SÁBADO', '8H')
+go
+
+select * from TB_COLETA_SELETIVA
